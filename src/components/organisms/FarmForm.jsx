@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import Textarea from "@/components/atoms/Textarea";
-import Card from "@/components/atoms/Card";
 import { farmService } from "@/services/api/farmService";
+import Textarea from "@/components/atoms/Textarea";
+import Input from "@/components/atoms/Input";
+import Select from "@/components/atoms/Select";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const FarmForm = ({ farm, onSave, onCancel }) => {
 const [formData, setFormData] = useState({
@@ -12,7 +13,13 @@ const [formData, setFormData] = useState({
     location: "",
     sizeAcres: "",
     type: "",
-    notes: ""
+    notes: "",
+    soilType: "",
+    gpsCoordinates: "",
+    currentCrop: "",
+    irrigationType: "",
+    pastCropHistory: "",
+    fertilityLevel: ""
   });
 
   const [loading, setLoading] = useState(false);
@@ -24,7 +31,13 @@ setFormData({
         location: farm.location || "",
         sizeAcres: farm.sizeAcres || "",
         type: farm.type || "",
-        notes: farm.notes || ""
+        notes: farm.notes || "",
+        soilType: farm.soilType || "",
+        gpsCoordinates: farm.gpsCoordinates || "",
+        currentCrop: farm.currentCrop || "",
+        irrigationType: farm.irrigationType || "",
+        pastCropHistory: farm.pastCropHistory || "",
+        fertilityLevel: farm.fertilityLevel || ""
       });
     }
   }, [farm]);
@@ -101,7 +114,7 @@ try {
 required
         />
 
-        <Input
+<Input
           label="Farm Type"
           name="type"
           value={formData.type}
@@ -109,6 +122,80 @@ required
           placeholder="e.g., Crop Farm, Livestock, Mixed"
         />
 
+        <Select
+          label="Soil Type"
+          name="soilType"
+          value={formData.soilType}
+          onChange={handleChange}
+          placeholder="Select soil type"
+        >
+          <option value="Clay">Clay</option>
+          <option value="Sandy">Sandy</option>
+          <option value="Loam">Loam</option>
+          <option value="Silty Clay">Silty Clay</option>
+          <option value="Sandy Loam">Sandy Loam</option>
+          <option value="Clay Loam">Clay Loam</option>
+          <option value="Silt Loam">Silt Loam</option>
+          <option value="Peat">Peat</option>
+          <option value="Chalky">Chalky</option>
+        </Select>
+
+        <Input
+          label="GPS Coordinates / Map View"
+          name="gpsCoordinates"
+          value={formData.gpsCoordinates}
+          onChange={handleChange}
+          placeholder="e.g., 40.7128, -74.0060 or map link"
+        />
+
+        <Input
+          label="Current Crop"
+          name="currentCrop"
+          value={formData.currentCrop}
+          onChange={handleChange}
+          placeholder="e.g., Corn, Wheat, Soybeans"
+        />
+
+        <Select
+          label="Irrigation Type"
+          name="irrigationType"
+          value={formData.irrigationType}
+          onChange={handleChange}
+          placeholder="Select irrigation type"
+        >
+          <option value="Drip Irrigation">Drip Irrigation</option>
+          <option value="Sprinkler System">Sprinkler System</option>
+          <option value="Surface Irrigation">Surface Irrigation</option>
+          <option value="Subsurface Irrigation">Subsurface Irrigation</option>
+          <option value="Center Pivot">Center Pivot</option>
+          <option value="Rain Fed">Rain Fed</option>
+          <option value="Flood Irrigation">Flood Irrigation</option>
+          <option value="Furrow Irrigation">Furrow Irrigation</option>
+        </Select>
+
+        <Textarea
+          label="Past Crop History"
+          name="pastCropHistory"
+          value={formData.pastCropHistory}
+          onChange={handleChange}
+          placeholder="Previous crops grown, rotation history, yield information..."
+          rows={4}
+        />
+
+        <Select
+          label="Fertility Level"
+          name="fertilityLevel"
+          value={formData.fertilityLevel}
+          onChange={handleChange}
+          placeholder="Select fertility level"
+        >
+          <option value="Very Low">Very Low</option>
+          <option value="Low">Low</option>
+          <option value="Moderate">Moderate</option>
+          <option value="High">High</option>
+          <option value="Very High">Very High</option>
+          <option value="Optimal">Optimal</option>
+        </Select>
         <Textarea
           label="Notes"
           name="notes"

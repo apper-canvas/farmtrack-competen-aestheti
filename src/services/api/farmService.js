@@ -18,7 +18,13 @@ fields: [
           {"field": {"Name": "location_c"}},
           {"field": {"Name": "size_acres_c"}},
           {"field": {"Name": "type_c"}},
-          {"field": {"Name": "notes_c"}}
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "soil_type_c"}},
+          {"field": {"Name": "gps_coordinates_c"}},
+          {"field": {"Name": "current_crop_c"}},
+          {"field": {"Name": "irrigation_type_c"}},
+          {"field": {"Name": "past_crop_history_c"}},
+          {"field": {"Name": "fertility_level_c"}}
         ],
         orderBy: [{"fieldName": "Id", "sorttype": "DESC"}],
         pagingInfo: {"limit": 100, "offset": 0}
@@ -31,14 +37,20 @@ fields: [
         throw new Error(response.message);
       }
 
-      // Transform database fields to component-expected format
+// Transform database fields to component-expected format
       return response.data?.map(farm => ({
         Id: farm.Id,
         name: farm.name_c || '',
         location: farm.location_c || '',
-sizeAcres: farm.size_acres_c || 0,
+        sizeAcres: farm.size_acres_c || 0,
         type: farm.type_c || '',
-        notes: farm.notes_c || ''
+        notes: farm.notes_c || '',
+        soilType: farm.soil_type_c || '',
+        gpsCoordinates: farm.gps_coordinates_c || '',
+        currentCrop: farm.current_crop_c || '',
+        irrigationType: farm.irrigation_type_c || '',
+        pastCropHistory: farm.past_crop_history_c || '',
+        fertilityLevel: farm.fertility_level_c || ''
       })) || [];
     } catch (error) {
       console.error("Error in farmService.getAll:", error?.response?.data?.message || error);
@@ -49,13 +61,19 @@ sizeAcres: farm.size_acres_c || 0,
   async getById(id) {
     try {
       const params = {
-        fields: [
-{"field": {"Name": "Id"}},
+fields: [
+          {"field": {"Name": "Id"}},
           {"field": {"Name": "name_c"}},
           {"field": {"Name": "location_c"}},
           {"field": {"Name": "size_acres_c"}},
           {"field": {"Name": "type_c"}},
-          {"field": {"Name": "notes_c"}}
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "soil_type_c"}},
+          {"field": {"Name": "gps_coordinates_c"}},
+          {"field": {"Name": "current_crop_c"}},
+          {"field": {"Name": "irrigation_type_c"}},
+          {"field": {"Name": "past_crop_history_c"}},
+          {"field": {"Name": "fertility_level_c"}}
         ]
       };
 
@@ -71,14 +89,20 @@ sizeAcres: farm.size_acres_c || 0,
       }
 
       // Transform database fields to component-expected format
-      const farm = response.data;
+const farm = response.data;
       return {
         Id: farm.Id,
         name: farm.name_c || '',
         location: farm.location_c || '',
-sizeAcres: farm.size_acres_c || 0,
+        sizeAcres: farm.size_acres_c || 0,
         type: farm.type_c || '',
-        notes: farm.notes_c || ''
+        notes: farm.notes_c || '',
+        soilType: farm.soil_type_c || '',
+        gpsCoordinates: farm.gps_coordinates_c || '',
+        currentCrop: farm.current_crop_c || '',
+        irrigationType: farm.irrigation_type_c || '',
+        pastCropHistory: farm.past_crop_history_c || '',
+        fertilityLevel: farm.fertility_level_c || ''
       };
     } catch (error) {
       console.error(`Error in farmService.getById(${id}):`, error?.response?.data?.message || error);
@@ -89,13 +113,20 @@ sizeAcres: farm.size_acres_c || 0,
   async create(farmData) {
     try {
       // Transform component data to database fields (only Updateable fields)
+// Transform component data to database fields (only Updateable fields)
       const params = {
         records: [{
-name_c: farmData.name || '',
+          name_c: farmData.name || '',
           location_c: farmData.location || '',
           size_acres_c: parseFloat(farmData.sizeAcres) || 0,
           type_c: farmData.type || '',
-          notes_c: farmData.notes || ''
+          notes_c: farmData.notes || '',
+          soil_type_c: farmData.soilType || '',
+          gps_coordinates_c: farmData.gpsCoordinates || '',
+          current_crop_c: farmData.currentCrop || '',
+          irrigation_type_c: farmData.irrigationType || '',
+past_crop_history_c: farmData.pastCropHistory || '',
+          fertility_level_c: farmData.fertilityLevel || ''
         }]
       };
 
@@ -119,14 +150,20 @@ name_c: farmData.name || '',
         
         if (successful.length > 0) {
           const created = successful[0].data;
-          // Transform back to component format
+// Transform back to component format
           return {
             Id: created.Id,
-name: created.name_c || '',
+            name: created.name_c || '',
             location: created.location_c || '',
             sizeAcres: created.size_acres_c || 0,
             type: created.type_c || '',
-            notes: created.notes_c || ''
+            notes: created.notes_c || '',
+            soilType: created.soil_type_c || '',
+            gpsCoordinates: created.gps_coordinates_c || '',
+            currentCrop: created.current_crop_c || '',
+            irrigationType: created.irrigation_type_c || '',
+            pastCropHistory: created.past_crop_history_c || '',
+            fertilityLevel: created.fertility_level_c || ''
           };
         }
       }
@@ -139,14 +176,21 @@ name: created.name_c || '',
   async update(id, farmData) {
     try {
       // Transform component data to database fields (only Updateable fields)
+// Transform component data to database fields (only Updateable fields)
       const params = {
         records: [{
           Id: parseInt(id),
           name_c: farmData.name || '',
-location_c: farmData.location || '',
+          location_c: farmData.location || '',
           size_acres_c: parseFloat(farmData.sizeAcres) || 0,
           type_c: farmData.type || '',
-          notes_c: farmData.notes || ''
+          notes_c: farmData.notes || '',
+          soil_type_c: farmData.soilType || '',
+          gps_coordinates_c: farmData.gpsCoordinates || '',
+          current_crop_c: farmData.currentCrop || '',
+          irrigation_type_c: farmData.irrigationType || '',
+past_crop_history_c: farmData.pastCropHistory || '',
+          fertility_level_c: farmData.fertilityLevel || ''
         }]
       };
 
@@ -177,7 +221,13 @@ const updated = successful[0].data;
             location: updated.location_c || '',
             sizeAcres: updated.size_acres_c || 0,
             type: updated.type_c || '',
-            notes: updated.notes_c || ''
+            notes: updated.notes_c || '',
+            soilType: updated.soil_type_c || '',
+            gpsCoordinates: updated.gps_coordinates_c || '',
+            currentCrop: updated.current_crop_c || '',
+            irrigationType: updated.irrigation_type_c || '',
+            pastCropHistory: updated.past_crop_history_c || '',
+            fertilityLevel: updated.fertility_level_c || ''
           };
         }
       }
