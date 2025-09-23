@@ -137,12 +137,12 @@ const IrrigationForm = ({ irrigation, onSave, onCancel }) => {
           onChange={handleChange}
           placeholder="e.g., 500, 1200.5, 2.5"
           required
-        />
+/>
 
         <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             onClick={onCancel}
             disabled={loading}
           >
@@ -151,13 +151,13 @@ const IrrigationForm = ({ irrigation, onSave, onCancel }) => {
           <Button
             type="submit"
             variant="primary"
-            icon="Save"
+            loading={loading}
             disabled={loading}
           >
-            {loading ? "Saving..." : irrigation ? "Update Irrigation" : "Add Irrigation"}
+            {irrigation ? "Update Irrigation" : "Add Irrigation"}
           </Button>
         </div>
-      </form>
+</form>
     </Card>
   );
 };

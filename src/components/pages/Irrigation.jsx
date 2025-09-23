@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { irrigationService } from "@/services/api/irrigationService";
+import ApperIcon from "@/components/ApperIcon";
 import IrrigationCard from "@/components/molecules/IrrigationCard";
-import IrrigationForm from "@/components/organisms/IrrigationForm";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
-import { irrigationService } from "@/services/api/irrigationService";
+import Loading from "@/components/ui/Loading";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import IrrigationForm from "@/components/organisms/IrrigationForm";
 
 const Irrigation = () => {
   const [irrigations, setIrrigations] = useState([]);
@@ -20,15 +20,7 @@ const Irrigation = () => {
   const [editingIrrigation, setEditingIrrigation] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    loadIrrigations();
-  }, []);
-
-  useEffect(() => {
-    filterIrrigations();
-  }, [irrigations, searchTerm]);
-
-  const loadIrrigations = async () => {
+const loadIrrigations = async () => {
     setLoading(true);
     setError("");
 
@@ -42,6 +34,13 @@ const Irrigation = () => {
     }
   };
 
+  useEffect(() => {
+    loadIrrigations();
+  }, []);
+
+useEffect(() => {
+    filterIrrigations();
+  }, [irrigations, searchTerm]);
   const filterIrrigations = () => {
     let filtered = [...irrigations];
 
