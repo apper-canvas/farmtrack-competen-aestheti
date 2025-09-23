@@ -83,7 +83,7 @@ const Header = () => {
             >
               Finances
             </Link>
-            <Link
+<Link
               to="/weather"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActivePath('/weather') 
@@ -92,6 +92,16 @@ const Header = () => {
               }`}
             >
 Weather
+            </Link>
+            <Link
+              to="/irrigation"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActivePath('/irrigation') 
+                  ? 'bg-primary-50 text-primary-600' 
+                  : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+              }`}
+            >
+              Irrigation
             </Link>
             <Link
               to="/farms"
@@ -178,7 +188,7 @@ Weather
               >
                 Finances
               </Link>
-              <Link
+<Link
                 to="/weather"
                 className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
                   isActivePath('/weather') 
@@ -187,6 +197,17 @@ Weather
                 }`}
 >
                 Weather
+              </Link>
+              <Link
+                to="/irrigation"
+                className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActivePath('/irrigation') 
+                    ? 'bg-primary-50 text-primary-600' 
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Irrigation
               </Link>
               <Link
                 to="/farms"
