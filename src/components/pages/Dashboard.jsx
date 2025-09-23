@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import StatsCard from "@/components/molecules/StatsCard";
-import WeatherCard from "@/components/molecules/WeatherCard";
-import TaskItem from "@/components/molecules/TaskItem";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
 import { cropService } from "@/services/api/cropService";
 import { farmService } from "@/services/api/farmService";
 import { taskService } from "@/services/api/taskService";
 import { financialService } from "@/services/api/financialService";
 import { weatherService } from "@/services/api/weatherService";
+import ApperIcon from "@/components/ApperIcon";
+import TaskItem from "@/components/molecules/TaskItem";
+import StatsCard from "@/components/molecules/StatsCard";
+import WeatherCard from "@/components/molecules/WeatherCard";
+import Tasks from "@/components/pages/Tasks";
+import Weather from "@/components/pages/Weather";
+import Farms from "@/components/pages/Farms";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -36,7 +39,7 @@ const [data, setData] = useState({
     setLoading(true);
     setError("");
 
-    try {
+try {
 const [crops, farms, tasks, financials, weather] = await Promise.all([
         cropService.getAll(),
         farmService.getAll(),
@@ -45,7 +48,7 @@ const [crops, farms, tasks, financials, weather] = await Promise.all([
         weatherService.getForecast()
       ]);
 
-      setData({ crops, tasks, financials, weather });
+      setData({ crops, tasks, financials, weather, farms });
     } catch (error) {
       setError(error.message || "Failed to load dashboard data");
     } finally {
