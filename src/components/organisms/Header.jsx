@@ -1,96 +1,188 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import Button from "@/components/atoms/Button";
+import { useSelector } from "react-redux";
+import { AuthContext } from "@/App";
 import ApperIcon from "@/components/ApperIcon";
+import Finances from "@/components/pages/Finances";
+import Tasks from "@/components/pages/Tasks";
+import Dashboard from "@/components/pages/Dashboard";
+import Weather from "@/components/pages/Weather";
+import Crops from "@/components/pages/Crops";
+import Button from "@/components/atoms/Button";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-
-  const navigation = [
-    { name: "Dashboard", path: "/", icon: "LayoutDashboard" },
-    { name: "Crops", path: "/crops", icon: "Sprout" },
-    { name: "Tasks", path: "/tasks", icon: "CheckSquare" },
-    { name: "Finances", path: "/finances", icon: "DollarSign" },
-    { name: "Weather", path: "/weather", icon: "Cloud" }
-  ];
+  const { logout } = useContext(AuthContext);
+  const { user } = useSelector((state) => state.user);
 
   const isActivePath = (path) => {
-    if (path === "/") return location.pathname === "/";
+    if (path === '/') {
+      return location.pathname === '/';
+    }
     return location.pathname.startsWith(path);
   };
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
-    <header className="bg-white shadow-lg border-b border-gray-200 relative z-50">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
-              <ApperIcon name="Sprout" className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-                FarmTrack Pro
-              </h1>
-              <p className="text-xs text-gray-500">Agriculture Management</p>
-            </div>
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
+                <ApperIcon name="Sprout" className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-xl font-bold text-gray-900">FarmTrack Pro</span>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 ${
-                  isActivePath(item.path)
-                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg"
-                    : "text-gray-600 hover:text-primary-600 hover:bg-primary-50"
-                }`}
-              >
-                <ApperIcon name={item.icon} className="h-5 w-5" />
-                <span>{item.name}</span>
-              </Link>
-            ))}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link
+              to="/"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActivePath('/') 
+                  ? 'bg-primary-50 text-primary-600' 
+                  : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+              }`}
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/crops"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActivePath('/crops') 
+                  ? 'bg-primary-50 text-primary-600' 
+                  : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+              }`}
+            >
+              Crops
+            </Link>
+            <Link
+              to="/tasks"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActivePath('/tasks') 
+                  ? 'bg-primary-50 text-primary-600' 
+                  : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+              }`}
+            >
+              Tasks
+            </Link>
+            <Link
+              to="/finances"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActivePath('/finances') 
+                  ? 'bg-primary-50 text-primary-600' 
+                  : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+              }`}
+            >
+              Finances
+            </Link>
+            <Link
+              to="/weather"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActivePath('/weather') 
+                  ? 'bg-primary-50 text-primary-600' 
+                  : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+              }`}
+            >
+              Weather
+            </Link>
           </nav>
 
-          {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <ApperIcon name={mobileMenuOpen ? "X" : "Menu"} className="h-6 w-6" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-xl z-40">
-          <div className="px-4 py-4 space-y-2">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
-                  isActivePath(item.path)
-                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg"
-                    : "text-gray-600 hover:text-primary-600 hover:bg-primary-50"
-                }`}
-              >
-                <ApperIcon name={item.icon} className="h-5 w-5" />
-                <span>{item.name}</span>
-              </Link>
-            ))}
+          {/* User Menu & Logout */}
+          <div className="flex items-center space-x-4">
+            {user && (
+              <span className="hidden sm:block text-sm text-gray-700">
+                Welcome, {user.firstName || user.name || 'User'}
+              </span>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              icon="LogOut"
+            >
+              Logout
+            </Button>
+            
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <ApperIcon name={mobileMenuOpen ? "X" : "Menu"} className="h-5 w-5" />
+            </Button>
           </div>
         </div>
-      )}
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 py-4">
+            <div className="flex flex-col space-y-2">
+              <Link
+                to="/"
+                className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActivePath('/') 
+                    ? 'bg-primary-50 text-primary-600' 
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+                }`}
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/crops"
+                className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActivePath('/crops') 
+                    ? 'bg-primary-50 text-primary-600' 
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+                }`}
+              >
+                Crops
+              </Link>
+              <Link
+                to="/tasks"
+                className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActivePath('/tasks') 
+                    ? 'bg-primary-50 text-primary-600' 
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+                }`}
+              >
+                Tasks
+              </Link>
+              <Link
+                to="/finances"
+                className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActivePath('/finances') 
+                    ? 'bg-primary-50 text-primary-600' 
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+                }`}
+              >
+                Finances
+              </Link>
+              <Link
+                to="/weather"
+                className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActivePath('/weather') 
+                    ? 'bg-primary-50 text-primary-600' 
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
+                }`}
+              >
+                Weather
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
     </header>
-  );
+);
 };
 
 export default Header;

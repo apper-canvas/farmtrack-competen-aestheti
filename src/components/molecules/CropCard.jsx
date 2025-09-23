@@ -29,15 +29,14 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
     return iconMap[cropName?.toLowerCase()] || "Sprout";
   };
 
-  const daysUntilHarvest = differenceInDays(new Date(crop.expectedHarvest), new Date());
+const daysUntilHarvest = differenceInDays(new Date(crop.expectedHarvest), new Date());
   const isReadyForHarvest = daysUntilHarvest <= 0;
-
   return (
     <Card className={`relative overflow-hidden ${isReadyForHarvest ? 'ring-2 ring-yellow-400 ring-opacity-50' : ''}`}>
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center shadow-md">
-            <ApperIcon name={getCropIcon(crop.name)} className="h-6 w-6 text-green-700" />
+<ApperIcon name={getCropIcon(crop.name)} className="h-6 w-6 text-green-700" />
           </div>
           <div>
             <h3 className="font-bold text-lg text-gray-900">{crop.name}</h3>
@@ -47,7 +46,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
           </div>
         </div>
         
-        <Badge variant={getStatusVariant(crop.status)} size="sm">
+<Badge variant={getStatusVariant(crop.status)} size="sm">
           {crop.status}
         </Badge>
       </div>
@@ -58,7 +57,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
             <ApperIcon name="MapPin" className="h-4 w-4" />
             <span>Field Location</span>
           </span>
-          <span className="font-medium text-gray-900">{crop.fieldLocation}</span>
+<span className="font-medium text-gray-900">{crop.fieldLocation}</span>
         </div>
         
         <div className="flex items-center justify-between text-sm">
@@ -66,7 +65,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
             <ApperIcon name="Package" className="h-4 w-4" />
             <span>Quantity</span>
           </span>
-          <span className="font-medium text-gray-900">{crop.quantity} acres</span>
+<span className="font-medium text-gray-900">{crop.quantity} acres</span>
         </div>
         
         <div className="flex items-center justify-between text-sm">
@@ -75,7 +74,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
             <span>Planted</span>
           </span>
           <span className="font-medium text-gray-900">
-            {format(new Date(crop.plantingDate), "MMM dd, yyyy")}
+{format(new Date(crop.plantingDate), "MMM dd, yyyy")}
           </span>
         </div>
         
@@ -84,7 +83,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
             <ApperIcon name="Target" className="h-4 w-4" />
             <span>Expected Harvest</span>
           </span>
-          <span className={`font-medium ${isReadyForHarvest ? 'text-yellow-600' : 'text-gray-900'}`}>
+<span className={`font-medium ${isReadyForHarvest ? 'text-yellow-600' : 'text-gray-900'}`}>
             {format(new Date(crop.expectedHarvest), "MMM dd, yyyy")}
           </span>
         </div>
@@ -104,7 +103,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
         )}
       </div>
       
-      {crop.notes && (
+{crop.notes && (
         <div className="mb-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-700 leading-relaxed">{crop.notes}</p>
         </div>
@@ -114,7 +113,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => onEdit(crop)}
+onClick={() => onEdit(crop)}
           icon="Edit"
         >
           Edit
@@ -122,7 +121,7 @@ const CropCard = ({ crop, onEdit, onDelete }) => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onDelete(crop.Id)}
+onClick={() => onDelete(crop.Id)}
           icon="Trash2"
           className="text-red-500 hover:text-red-700 hover:bg-red-50"
         >
