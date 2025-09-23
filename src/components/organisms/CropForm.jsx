@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Button from "@/components/atoms/Button";
+import { cropService } from "@/services/api/cropService";
+import { farmService } from "@/services/api/farmService";
+import Textarea from "@/components/atoms/Textarea";
 import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
-import Textarea from "@/components/atoms/Textarea";
+import Button from "@/components/atoms/Button";
 import Card from "@/components/atoms/Card";
-import { cropService } from "@/services/api/cropService";
 
 const CropForm = ({ crop, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name: "",
     variety: "",
     plantingDate: "",
@@ -16,10 +17,28 @@ const CropForm = ({ crop, onSave, onCancel }) => {
     fieldLocation: "",
     quantity: "",
     status: "planted",
-    notes: ""
+    notes: "",
+    farmId: ""
   });
+  const [farms, setFarms] = useState([]);
+  const [loadingFarms, setLoadingFarms] = useState(true);
 
   const [loading, setLoading] = useState(false);
+
+useEffect(() => {
+    const loadFarms = async () => {
+      try {
+        const farmData = await farmService.getAll();
+        setFarms(farmData);
+      } catch (error) {
+        console.error("Error loading farms:", error);
+        toast.error("Failed to load farms");
+      } finally {
+        setLoadingFarms(false);
+      }
+    };
+    loadFarms();
+  }, []);
 
   useEffect(() => {
     if (crop) {
@@ -31,7 +50,8 @@ const CropForm = ({ crop, onSave, onCancel }) => {
         fieldLocation: crop.fieldLocation || "",
         quantity: crop.quantity || "",
         status: crop.status || "planted",
-        notes: crop.notes || ""
+        notes: crop.notes || "",
+        farmId: crop.farmId || ""
       });
     }
   }, [crop]);
@@ -41,9 +61,10 @@ const CropForm = ({ crop, onSave, onCancel }) => {
     setLoading(true);
 
     try {
-      const cropData = {
+const cropData = {
         ...formData,
-        quantity: parseFloat(formData.quantity) || 0
+        quantity: parseFloat(formData.quantity) || 0,
+        farmId: formData.farmId ? parseInt(formData.farmId) : null
       };
 
       if (crop) {
@@ -62,22 +83,12 @@ const CropForm = ({ crop, onSave, onCancel }) => {
     }
   };
 
-  const handleChange = (e) => {
+const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-
-  return (
-    <Card className="max-w-2xl mx-auto">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {crop ? "Edit Crop" : "Add New Crop"}
-        </h2>
-        <p className="text-gray-600">
-          {crop ? "Update crop information" : "Enter details for your new crop"}
-        </p>
-      </div>
-
+return (
+    <Card className="p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
@@ -85,20 +96,16 @@ const CropForm = ({ crop, onSave, onCancel }) => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="e.g., Corn, Wheat, Tomatoes"
             required
+            placeholder="e.g., Tomatoes, Corn, Wheat"
           />
-
           <Input
             label="Variety"
             name="variety"
             value={formData.variety}
             onChange={handleChange}
-            placeholder="e.g., Sweet Corn, Winter Wheat"
+            placeholder="e.g., Cherry, Sweet Corn"
           />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="Planting Date"
             name="plantingDate"
@@ -107,52 +114,60 @@ const CropForm = ({ crop, onSave, onCancel }) => {
             onChange={handleChange}
             required
           />
-
           <Input
-            label="Expected Harvest Date"
+            label="Expected Harvest"
             name="expectedHarvest"
             type="date"
             value={formData.expectedHarvest}
             onChange={handleChange}
-            required
           />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="Field Location"
             name="fieldLocation"
             value={formData.fieldLocation}
             onChange={handleChange}
-            placeholder="e.g., North Field, Plot A"
-            required
+            placeholder="e.g., North Field, Section A"
           />
-
           <Input
-            label="Quantity (acres)"
+            label="Quantity"
             name="quantity"
             type="number"
-            step="0.1"
+            step="0.01"
+            min="0"
             value={formData.quantity}
             onChange={handleChange}
-            placeholder="e.g., 10.5"
-            required
+            placeholder="0.00"
           />
+          <Select
+            label="Farm"
+            name="farmId"
+            value={formData.farmId}
+            onChange={handleChange}
+            required
+            disabled={loadingFarms}
+          >
+            <option value="">
+              {loadingFarms ? "Loading farms..." : "Select a farm"}
+            </option>
+            {farms.map((farm) => (
+              <option key={farm.Id} value={farm.Id}>
+                {farm.name}
+              </option>
+            ))}
+          </Select>
+          <Select
+            label="Status"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            required
+          >
+            <option value="planted">Planted</option>
+            <option value="growing">Growing</option>
+            <option value="ready">Ready</option>
+            <option value="harvested">Harvested</option>
+          </Select>
         </div>
-
-        <Select
-          label="Status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          required
-        >
-          <option value="planted">Planted</option>
-          <option value="growing">Growing</option>
-          <option value="ready">Ready</option>
-          <option value="harvested">Harvested</option>
-        </Select>
-
         <Textarea
           label="Notes"
           name="notes"
@@ -161,27 +176,24 @@ const CropForm = ({ crop, onSave, onCancel }) => {
           placeholder="Additional notes about this crop..."
           rows={4}
         />
-
-        <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+        <div className="flex justify-end space-x-4">
           <Button
             type="button"
-            variant="ghost"
             onClick={onCancel}
-            disabled={loading}
+            variant="outline"
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            variant="primary"
-            icon="Save"
             disabled={loading}
+            variant="primary"
           >
             {loading ? "Saving..." : crop ? "Update Crop" : "Add Crop"}
           </Button>
         </div>
       </form>
-    </Card>
+</Card>
   );
 };
 

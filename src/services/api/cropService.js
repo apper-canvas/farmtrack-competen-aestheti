@@ -13,7 +13,7 @@ class CropService {
     try {
       const params = {
         fields: [
-          {"field": {"Name": "Id"}},
+{"field": {"Name": "Id"}},
           {"field": {"Name": "name_c"}},
           {"field": {"Name": "variety_c"}},
           {"field": {"Name": "planting_date_c"}},
@@ -21,7 +21,8 @@ class CropService {
           {"field": {"Name": "field_location_c"}},
           {"field": {"Name": "quantity_c"}},
           {"field": {"Name": "status_c"}},
-          {"field": {"Name": "notes_c"}}
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "farm_id_c"}}
         ],
         orderBy: [{"fieldName": "Id", "sorttype": "DESC"}],
         pagingInfo: {"limit": 100, "offset": 0}
@@ -37,14 +38,15 @@ class CropService {
       // Transform database fields to component-expected format
       return response.data?.map(crop => ({
         Id: crop.Id,
-        name: crop.name_c || '',
+name: crop.name_c || '',
         variety: crop.variety_c || '',
         plantingDate: crop.planting_date_c || null,
         expectedHarvest: crop.expected_harvest_c || null,
         fieldLocation: crop.field_location_c || '',
         quantity: crop.quantity_c || 0,
         status: crop.status_c || 'planted',
-        notes: crop.notes_c || ''
+        notes: crop.notes_c || '',
+        farmId: crop.farm_id_c?.Id || null
       })) || [];
     } catch (error) {
       console.error("Error in cropService.getAll:", error?.response?.data?.message || error);
@@ -55,7 +57,7 @@ class CropService {
   async getById(id) {
     try {
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "name_c"}},
           {"field": {"Name": "variety_c"}},
@@ -64,7 +66,8 @@ class CropService {
           {"field": {"Name": "field_location_c"}},
           {"field": {"Name": "quantity_c"}},
           {"field": {"Name": "status_c"}},
-          {"field": {"Name": "notes_c"}}
+          {"field": {"Name": "notes_c"}},
+          {"field": {"Name": "farm_id_c"}}
         ]
       };
 
@@ -86,11 +89,12 @@ class CropService {
         name: crop.name_c || '',
         variety: crop.variety_c || '',
         plantingDate: crop.planting_date_c || null,
-        expectedHarvest: crop.expected_harvest_c || null,
+expectedHarvest: crop.expected_harvest_c || null,
         fieldLocation: crop.field_location_c || '',
         quantity: crop.quantity_c || 0,
         status: crop.status_c || 'planted',
-        notes: crop.notes_c || ''
+        notes: crop.notes_c || '',
+        farmId: crop.farm_id_c?.Id || null
       };
     } catch (error) {
       console.error(`Error in cropService.getById(${id}):`, error?.response?.data?.message || error);
@@ -103,14 +107,15 @@ class CropService {
       // Transform component data to database fields (only Updateable fields)
       const params = {
         records: [{
-          name_c: cropData.name || '',
+name_c: cropData.name || '',
           variety_c: cropData.variety || '',
           planting_date_c: cropData.plantingDate || null,
           expected_harvest_c: cropData.expectedHarvest || null,
           field_location_c: cropData.fieldLocation || '',
           quantity_c: parseFloat(cropData.quantity) || 0,
           status_c: cropData.status || 'planted',
-          notes_c: cropData.notes || ''
+          notes_c: cropData.notes || '',
+          farm_id_c: cropData.farmId || null
         }]
       };
 
@@ -141,10 +146,11 @@ class CropService {
             variety: created.variety_c || '',
             plantingDate: created.planting_date_c || null,
             expectedHarvest: created.expected_harvest_c || null,
-            fieldLocation: created.field_location_c || '',
+fieldLocation: created.field_location_c || '',
             quantity: created.quantity_c || 0,
             status: created.status_c || 'planted',
-            notes: created.notes_c || ''
+            notes: created.notes_c || '',
+            farmId: created.farm_id_c?.Id || null
           };
         }
       }
@@ -159,7 +165,7 @@ class CropService {
       // Transform component data to database fields (only Updateable fields)
       const params = {
         records: [{
-          Id: parseInt(id),
+Id: parseInt(id),
           name_c: cropData.name || '',
           variety_c: cropData.variety || '',
           planting_date_c: cropData.plantingDate || null,
@@ -167,7 +173,8 @@ class CropService {
           field_location_c: cropData.fieldLocation || '',
           quantity_c: parseFloat(cropData.quantity) || 0,
           status_c: cropData.status || 'planted',
-          notes_c: cropData.notes || ''
+          notes_c: cropData.notes || '',
+          farm_id_c: cropData.farmId || null
         }]
       };
 
@@ -192,7 +199,7 @@ class CropService {
         if (successful.length > 0) {
           const updated = successful[0].data;
           // Transform back to component format
-          return {
+return {
             Id: updated.Id,
             name: updated.name_c || '',
             variety: updated.variety_c || '',
@@ -201,7 +208,8 @@ class CropService {
             fieldLocation: updated.field_location_c || '',
             quantity: updated.quantity_c || 0,
             status: updated.status_c || 'planted',
-            notes: updated.notes_c || ''
+            notes: updated.notes_c || '',
+            farmId: updated.farm_id_c?.Id || null
           };
         }
       }
