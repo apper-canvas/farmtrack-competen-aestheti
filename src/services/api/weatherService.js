@@ -49,38 +49,14 @@ class WeatherService {
       throw error;
     }
   }
-async getCurrentWeather() {
+
+  async getCurrentWeather() {
     try {
       const forecast = await this.getForecast();
       return forecast[0] || null;
     } catch (error) {
       console.error("Error in weatherService.getCurrentWeather:", error?.response?.data?.message || error);
       throw error;
-    }
-  }
-
-  async getAIInsights(weatherData) {
-    try {
-      if (!weatherData) {
-        return [];
-      }
-
-      const result = await this.apperClient.functions.invoke(import.meta.env.VITE_WEATHER_INSIGHTS, {
-        body: JSON.stringify({ weatherData }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!result.success) {
-        console.error("Failed to get AI insights:", result.message);
-        return [];
-      }
-
-      return result.data?.insights || [];
-    } catch (error) {
-      console.error("Error in weatherService.getAIInsights:", error?.response?.data?.message || error);
-      return [];
     }
   }
 

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { weatherService } from "@/services/api/weatherService";
-import ApperIcon from "@/components/ApperIcon";
+import React, { useState, useEffect } from "react";
 import WeatherCard from "@/components/molecules/WeatherCard";
-import Error from "@/components/ui/Error";
-import Loading from "@/components/ui/Loading";
 import Card from "@/components/atoms/Card";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import ApperIcon from "@/components/ApperIcon";
+import { weatherService } from "@/services/api/weatherService";
 
 const Weather = () => {
   const [weather, setWeather] = useState([]);
@@ -139,7 +139,7 @@ const Weather = () => {
       )}
 
       {/* Agricultural Insights */}
-<Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-green-200">
+      <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-green-200">
         <div className="flex items-center space-x-3 mb-6">
           <div className="h-12 w-12 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
             <ApperIcon name="Lightbulb" className="h-6 w-6 text-white" />
@@ -147,9 +147,7 @@ const Weather = () => {
           <h2 className="text-2xl font-bold text-gray-900">Agricultural Insights</h2>
         </div>
         
-        <AIInsightsSection todayWeather={todayWeather} />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-green-800">Weather Recommendations</h3>
             <div className="space-y-3">
@@ -215,85 +213,6 @@ const Weather = () => {
           </div>
         </div>
       </Card>
-    </div>
-  );
-};
-
-// AI Insights Component
-const AIInsightsSection = ({ todayWeather }) => {
-  const [aiInsights, setAiInsights] = useState([]);
-  const [insightsLoading, setInsightsLoading] = useState(false);
-  const [insightsError, setInsightsError] = useState("");
-
-  useEffect(() => {
-    if (todayWeather) {
-      loadAIInsights();
-    }
-  }, [todayWeather]);
-
-  const loadAIInsights = async () => {
-    setInsightsLoading(true);
-    setInsightsError("");
-
-    try {
-      const insights = await weatherService.getAIInsights(todayWeather);
-      setAiInsights(insights);
-    } catch (error) {
-      setInsightsError("Failed to load AI insights");
-      console.error("Error loading AI insights:", error);
-    } finally {
-      setInsightsLoading(false);
-    }
-  };
-
-  if (!todayWeather) return null;
-
-  return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-green-800 flex items-center space-x-2">
-          <ApperIcon name="Bot" className="h-5 w-5 text-green-600" />
-          <span>AI-Powered Insights</span>
-        </h3>
-        {insightsLoading && (
-          <div className="flex items-center space-x-2 text-sm text-gray-500">
-            <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-            <span>Generating insights...</span>
-          </div>
-        )}
-      </div>
-
-      {insightsError && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
-          <div className="flex items-center space-x-2">
-            <ApperIcon name="AlertTriangle" className="h-4 w-4 text-yellow-600" />
-            <span className="text-sm text-yellow-800">AI insights temporarily unavailable</span>
-          </div>
-        </div>
-      )}
-
-      {aiInsights.length > 0 && (
-        <div className="space-y-3">
-          {aiInsights.map((insight, index) => (
-            <div key={index} className="flex items-start space-x-3 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-lg border border-green-100">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center flex-shrink-0">
-                <ApperIcon name="Sparkles" className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">{insight.title}</div>
-                <div className="text-sm text-gray-700 mt-1">{insight.description}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {!insightsLoading && aiInsights.length === 0 && !insightsError && (
-        <div className="text-center py-4 text-gray-500">
-          <ApperIcon name="Zap" className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-          <p className="text-sm">AI insights will appear here when available</p>
-        </div>
-      )}
     </div>
   );
 };
