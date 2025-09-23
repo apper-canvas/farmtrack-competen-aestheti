@@ -221,6 +221,3 @@ async delete(id) {
 }
 
 export const farmService = new FarmService();
-
-
-export const farmService = new FarmService();
