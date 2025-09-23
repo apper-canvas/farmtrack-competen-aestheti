@@ -2,24 +2,29 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
+import Textarea from "@/components/atoms/Textarea";
 import Card from "@/components/atoms/Card";
 import { farmService } from "@/services/api/farmService";
 
 const FarmForm = ({ farm, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name: "",
     location: "",
-    sizeAcres: ""
+    sizeAcres: "",
+    type: "",
+    notes: ""
   });
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (farm) {
-      setFormData({
+setFormData({
         name: farm.name || "",
         location: farm.location || "",
-        sizeAcres: farm.sizeAcres || ""
+        sizeAcres: farm.sizeAcres || "",
+        type: farm.type || "",
+        notes: farm.notes || ""
       });
     }
   }, [farm]);
@@ -28,7 +33,7 @@ const FarmForm = ({ farm, onSave, onCancel }) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
+try {
       const farmData = {
         ...formData,
         sizeAcres: parseFloat(formData.sizeAcres) || 0
@@ -93,7 +98,24 @@ const FarmForm = ({ farm, onSave, onCancel }) => {
           value={formData.sizeAcres}
           onChange={handleChange}
           placeholder="e.g., 150.5"
-          required
+required
+        />
+
+        <Input
+          label="Farm Type"
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          placeholder="e.g., Crop Farm, Livestock, Mixed"
+        />
+
+        <Textarea
+          label="Notes"
+          name="notes"
+          value={formData.notes}
+          onChange={handleChange}
+          placeholder="Additional information about the farm..."
+          rows={4}
         />
 
         <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
