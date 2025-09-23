@@ -222,37 +222,5 @@ async delete(id) {
 
 export const farmService = new FarmService();
 
-  async delete(id) {
-    try {
-      const params = { 
-        RecordIds: [parseInt(id)]
-      };
-
-      const response = await this.apperClient.deleteRecord(this.tableName, params);
-      
-      if (!response.success) {
-        console.error(`Failed to delete farm ${id}:`, response.message);
-        throw new Error(response.message);
-      }
-
-      if (response.results) {
-        const successful = response.results.filter(r => r.success);
-        const failed = response.results.filter(r => !r.success);
-        
-        if (failed.length > 0) {
-          console.error(`Failed to delete ${failed.length} farms:`, failed);
-          failed.forEach(record => {
-            if (record.message) throw new Error(record.message);
-          });
-        }
-        
-        return successful.length > 0;
-      }
-    } catch (error) {
-      console.error(`Error in farmService.delete(${id}):`, error?.response?.data?.message || error);
-      throw error;
-    }
-  }
-}
 
 export const farmService = new FarmService();
