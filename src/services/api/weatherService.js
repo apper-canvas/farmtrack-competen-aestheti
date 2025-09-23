@@ -49,8 +49,7 @@ class WeatherService {
       throw error;
     }
   }
-
-  async getCurrentWeather() {
+async getCurrentWeather() {
     try {
       const forecast = await this.getForecast();
       return forecast[0] || null;
@@ -60,6 +59,34 @@ class WeatherService {
     }
   }
 
+  async getRealTimeWeather(location = "New York") {
+    try {
+      // Initialize ApperClient for Edge Function call
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const result = await apperClient.functions.invoke(import.meta.env.VITE_GET_REAL_TIME_WEATHER, {
+        method: 'POST',
+        body: JSON.stringify({ location }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!result.success) {
+        console.error("Failed to get real-time weather:", result.message);
+        throw new Error(result.message || "Failed to fetch real-time weather");
+      }
+
+      return result.data;
+    } catch (error) {
+      console.error("Error in weatherService.getRealTimeWeather:", error?.response?.data?.message || error);
+      throw error;
+    }
+  }
   async getWeatherByDate(date) {
     try {
       const params = {
