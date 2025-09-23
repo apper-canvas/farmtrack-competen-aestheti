@@ -10,6 +10,7 @@ import Farms from "@/components/pages/Farms";
 import Tasks from "@/components/pages/Tasks";
 import Finances from "@/components/pages/Finances";
 import Weather from "@/components/pages/Weather";
+import Irrigation from "@/components/pages/Irrigation";
 import Login from '@/components/pages/Login';
 import Signup from '@/components/pages/Signup';
 import Callback from '@/components/pages/Callback';
@@ -138,7 +139,8 @@ function App() {
               <Route path="farms" element={<Farms />} />
               <Route path="tasks" element={<Tasks />} />
               <Route path="finances" element={<Finances />} />
-              <Route path="weather" element={<Weather />} />
+<Route path="weather" element={<Weather />} />
+              <Route path="irrigation" element={<Irrigation />} />
             </Route>
           )}
           <Route path="*" element={<NotFound />} />
