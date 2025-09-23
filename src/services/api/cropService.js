@@ -22,7 +22,10 @@ class CropService {
           {"field": {"Name": "quantity_c"}},
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "notes_c"}},
-          {"field": {"Name": "farm_id_c"}}
+          {"field": {"Name": "farm_id_c"}},
+          {"field": {"Name": "current_stage_c"}},
+          {"field": {"Name": "input_usage_c"}},
+          {"field": {"Name": "yield_estimates_c"}}
         ],
         orderBy: [{"fieldName": "Id", "sorttype": "DESC"}],
         pagingInfo: {"limit": 100, "offset": 0}
@@ -37,8 +40,8 @@ class CropService {
 
       // Transform database fields to component-expected format
       return response.data?.map(crop => ({
-        Id: crop.Id,
-name: crop.name_c || '',
+Id: crop.Id,
+        name: crop.name_c || '',
         variety: crop.variety_c || '',
         plantingDate: crop.planting_date_c || null,
         expectedHarvest: crop.expected_harvest_c || null,
@@ -46,7 +49,10 @@ name: crop.name_c || '',
         quantity: crop.quantity_c || 0,
         status: crop.status_c || 'planted',
         notes: crop.notes_c || '',
-        farmId: crop.farm_id_c?.Id || null
+        farmId: crop.farm_id_c?.Id || null,
+        currentStage: crop.current_stage_c || '',
+        inputUsage: crop.input_usage_c || '',
+        yieldEstimates: crop.yield_estimates_c || ''
       })) || [];
     } catch (error) {
       console.error("Error in cropService.getAll:", error?.response?.data?.message || error);
@@ -65,9 +71,12 @@ fields: [
           {"field": {"Name": "expected_harvest_c"}},
           {"field": {"Name": "field_location_c"}},
           {"field": {"Name": "quantity_c"}},
-          {"field": {"Name": "status_c"}},
+{"field": {"Name": "status_c"}},
           {"field": {"Name": "notes_c"}},
-          {"field": {"Name": "farm_id_c"}}
+          {"field": {"Name": "farm_id_c"}},
+          {"field": {"Name": "current_stage_c"}},
+          {"field": {"Name": "input_usage_c"}},
+          {"field": {"Name": "yield_estimates_c"}}
         ]
       };
 
@@ -94,7 +103,10 @@ expectedHarvest: crop.expected_harvest_c || null,
         quantity: crop.quantity_c || 0,
         status: crop.status_c || 'planted',
         notes: crop.notes_c || '',
-        farmId: crop.farm_id_c?.Id || null
+        farmId: crop.farm_id_c?.Id || null,
+        currentStage: crop.current_stage_c || '',
+        inputUsage: crop.input_usage_c || '',
+        yieldEstimates: crop.yield_estimates_c || ''
       };
     } catch (error) {
       console.error(`Error in cropService.getById(${id}):`, error?.response?.data?.message || error);
@@ -115,7 +127,10 @@ name_c: cropData.name || '',
           quantity_c: parseFloat(cropData.quantity) || 0,
           status_c: cropData.status || 'planted',
           notes_c: cropData.notes || '',
-          farm_id_c: cropData.farmId || null
+          farm_id_c: cropData.farmId || null,
+          current_stage_c: cropData.currentStage || '',
+          input_usage_c: cropData.inputUsage || '',
+          yield_estimates_c: cropData.yieldEstimates || ''
         }]
       };
 
@@ -150,7 +165,10 @@ fieldLocation: created.field_location_c || '',
             quantity: created.quantity_c || 0,
             status: created.status_c || 'planted',
             notes: created.notes_c || '',
-            farmId: created.farm_id_c?.Id || null
+            farmId: created.farm_id_c?.Id || null,
+            currentStage: created.current_stage_c || '',
+            inputUsage: created.input_usage_c || '',
+            yieldEstimates: created.yield_estimates_c || ''
           };
         }
       }
@@ -171,15 +189,17 @@ Id: parseInt(id),
           planting_date_c: cropData.plantingDate || null,
           expected_harvest_c: cropData.expectedHarvest || null,
           field_location_c: cropData.fieldLocation || '',
-          quantity_c: parseFloat(cropData.quantity) || 0,
+quantity_c: parseFloat(cropData.quantity) || 0,
           status_c: cropData.status || 'planted',
           notes_c: cropData.notes || '',
-          farm_id_c: cropData.farmId || null
+          farm_id_c: cropData.farmId || null,
+          current_stage_c: cropData.currentStage || '',
+          input_usage_c: cropData.inputUsage || '',
+          yield_estimates_c: cropData.yieldEstimates || ''
         }]
       };
 
       const response = await this.apperClient.updateRecord(this.tableName, params);
-      
       if (!response.success) {
         console.error(`Failed to update crop ${id}:`, response.message);
         throw new Error(response.message);
@@ -205,11 +225,14 @@ return {
             variety: updated.variety_c || '',
             plantingDate: updated.planting_date_c || null,
             expectedHarvest: updated.expected_harvest_c || null,
-            fieldLocation: updated.field_location_c || '',
+fieldLocation: updated.field_location_c || '',
             quantity: updated.quantity_c || 0,
             status: updated.status_c || 'planted',
             notes: updated.notes_c || '',
-            farmId: updated.farm_id_c?.Id || null
+            farmId: updated.farm_id_c?.Id || null,
+            currentStage: updated.current_stage_c || '',
+            inputUsage: updated.input_usage_c || '',
+            yieldEstimates: updated.yield_estimates_c || ''
           };
         }
       }

@@ -13,12 +13,15 @@ const [formData, setFormData] = useState({
     name: "",
     variety: "",
     plantingDate: "",
-    expectedHarvest: "",
+expectedHarvest: "",
     fieldLocation: "",
     quantity: "",
     status: "planted",
     notes: "",
-    farmId: ""
+    farmId: "",
+    currentStage: "Germination",
+    inputUsage: "",
+    yieldEstimates: ""
   });
   const [farms, setFarms] = useState([]);
   const [loadingFarms, setLoadingFarms] = useState(true);
@@ -44,14 +47,17 @@ useEffect(() => {
     if (crop) {
       setFormData({
         name: crop.name || "",
-        variety: crop.variety || "",
+variety: crop.variety || "",
         plantingDate: crop.plantingDate ? crop.plantingDate.split("T")[0] : "",
         expectedHarvest: crop.expectedHarvest ? crop.expectedHarvest.split("T")[0] : "",
         fieldLocation: crop.fieldLocation || "",
         quantity: crop.quantity || "",
         status: crop.status || "planted",
         notes: crop.notes || "",
-        farmId: crop.farmId || ""
+        farmId: crop.farmId || "",
+        currentStage: crop.currentStage || "Germination",
+        inputUsage: crop.inputUsage || "",
+        yieldEstimates: crop.yieldEstimates || ""
       });
     }
   }, [crop]);
@@ -62,7 +68,7 @@ useEffect(() => {
 
     try {
 const cropData = {
-        ...formData,
+...formData,
         quantity: parseFloat(formData.quantity) || 0,
         farmId: formData.farmId ? parseInt(formData.farmId) : null
       };
@@ -166,8 +172,37 @@ return (
             <option value="growing">Growing</option>
             <option value="ready">Ready</option>
             <option value="harvested">Harvested</option>
+</Select>
+          <Select
+            label="Current Stage"
+            name="currentStage"
+            value={formData.currentStage}
+            onChange={handleChange}
+            required
+          >
+            <option value="Germination">Germination</option>
+            <option value="Vegetative">Vegetative</option>
+            <option value="Flowering">Flowering</option>
+            <option value="Fruiting">Fruiting</option>
+            <option value="Mature">Mature</option>
+            <option value="Harvested">Harvested</option>
           </Select>
+          <Input
+            label="Yield Estimates"
+            name="yieldEstimates"
+            value={formData.yieldEstimates}
+            onChange={handleChange}
+            placeholder="e.g., 50 tons per hectare"
+          />
         </div>
+        <Textarea
+          label="Input Usage"
+          name="inputUsage"
+          value={formData.inputUsage}
+          onChange={handleChange}
+          placeholder="Detail seeds, fertilizers, pesticides used..."
+          rows={4}
+        />
         <Textarea
           label="Notes"
           name="notes"

@@ -87,6 +87,11 @@ const daysUntilHarvest = differenceInDays(new Date(crop.expectedHarvest), new Da
             {format(new Date(crop.expectedHarvest), "MMM dd, yyyy")}
           </span>
         </div>
+{crop.currentStage && (
+          <Badge variant="secondary" className="text-xs">
+            {crop.currentStage}
+          </Badge>
+        )}
         
         {daysUntilHarvest > 0 && (
           <div className="flex items-center justify-between text-sm">
@@ -103,7 +108,21 @@ const daysUntilHarvest = differenceInDays(new Date(crop.expectedHarvest), new Da
         )}
       </div>
       
-{crop.notes && (
+{crop.inputUsage && (
+        <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <h4 className="text-sm font-medium text-blue-800 mb-1">Input Usage</h4>
+          <p className="text-sm text-blue-700 leading-relaxed whitespace-pre-line">{crop.inputUsage}</p>
+        </div>
+      )}
+      
+      {crop.yieldEstimates && (
+        <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
+          <h4 className="text-sm font-medium text-green-800 mb-1">Yield Estimates</h4>
+          <p className="text-sm text-green-700">{crop.yieldEstimates}</p>
+        </div>
+      )}
+
+      {crop.notes && (
         <div className="mb-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-700 leading-relaxed">{crop.notes}</p>
         </div>
