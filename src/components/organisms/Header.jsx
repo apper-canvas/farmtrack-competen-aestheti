@@ -91,7 +91,18 @@ const Header = () => {
                   : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
               }`}
             >
-              Weather
+Weather
+            </Link>
+            <Link
+              to="/farms"
+              className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
+                isActivePath("/farms")
+                  ? "bg-primary text-white shadow-md"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <ApperIcon name="Home" size={18} />
+              <span>Farms</span>
             </Link>
           </nav>
 
@@ -174,8 +185,19 @@ const Header = () => {
                     ? 'bg-primary-50 text-primary-600' 
                     : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                 }`}
-              >
+>
                 Weather
+              </Link>
+              <Link
+                to="/farms"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActivePath("/farms")
+                    ? "bg-primary text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Farms
               </Link>
             </div>
           </div>

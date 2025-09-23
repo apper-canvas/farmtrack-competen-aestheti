@@ -6,6 +6,7 @@ import { setUser, clearUser } from '@/store/userSlice';
 import Layout from "@/components/organisms/Layout";
 import Dashboard from "@/components/pages/Dashboard";
 import Crops from "@/components/pages/Crops";
+import Farms from "@/components/pages/Farms";
 import Tasks from "@/components/pages/Tasks";
 import Finances from "@/components/pages/Finances";
 import Weather from "@/components/pages/Weather";
@@ -130,10 +131,11 @@ function App() {
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
           <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
-          {isAuthenticated && (
+{isAuthenticated && (
             <Route path="/" element={<Layout />}>
               <Route index element={<Dashboard />} />
               <Route path="crops" element={<Crops />} />
+              <Route path="farms" element={<Farms />} />
               <Route path="tasks" element={<Tasks />} />
               <Route path="finances" element={<Finances />} />
               <Route path="weather" element={<Weather />} />

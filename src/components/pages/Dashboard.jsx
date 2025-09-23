@@ -11,14 +11,16 @@ import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import ApperIcon from "@/components/ApperIcon";
 import { cropService } from "@/services/api/cropService";
+import { farmService } from "@/services/api/farmService";
 import { taskService } from "@/services/api/taskService";
 import { financialService } from "@/services/api/financialService";
 import { weatherService } from "@/services/api/weatherService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState({
+const [data, setData] = useState({
     crops: [],
+    farms: [],
     tasks: [],
     financials: [],
     weather: []
@@ -35,8 +37,9 @@ const Dashboard = () => {
     setError("");
 
     try {
-      const [crops, tasks, financials, weather] = await Promise.all([
+const [crops, farms, tasks, financials, weather] = await Promise.all([
         cropService.getAll(),
+        farmService.getAll(),
         taskService.getAll(),
         financialService.getAll(),
         weatherService.getForecast()
@@ -123,7 +126,15 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <StatsCard
+          title="Total Farms"
+          value={data.farms.length}
+          icon="Home"
+          color="primary"
+          trend={data.farms.length > 0 ? "up" : ""}
+          trendValue={`${data.farms.reduce((total, farm) => total + (farm.sizeAcres || 0), 0).toFixed(1)} acres`}
+        />
         <StatsCard
           title="Active Crops"
           value={activeCrops}
@@ -235,13 +246,21 @@ const Dashboard = () => {
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Button
+<Button
             onClick={() => navigate("/crops")}
             variant="outline"
             className="h-20 flex-col space-y-2"
             icon="Sprout"
           >
             <span>Add Crop</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/farms")}
+            variant="outline"
+            className="h-20 flex-col space-y-2"
+            icon="Home"
+          >
+            <span>Manage Farms</span>
           </Button>
           <Button
             onClick={() => navigate("/tasks")}
