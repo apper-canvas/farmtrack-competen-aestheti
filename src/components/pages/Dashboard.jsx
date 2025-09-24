@@ -6,6 +6,7 @@ import { farmService } from "@/services/api/farmService";
 import { taskService } from "@/services/api/taskService";
 import { financialService } from "@/services/api/financialService";
 import { weatherService } from "@/services/api/weatherService";
+import { inventoryService } from "@/services/api/inventoryService";
 import ApperIcon from "@/components/ApperIcon";
 import TaskItem from "@/components/molecules/TaskItem";
 import StatsCard from "@/components/molecules/StatsCard";
@@ -26,7 +27,8 @@ const [data, setData] = useState({
     farms: [],
     tasks: [],
     financials: [],
-    weather: []
+    weather: [],
+    inventory: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -40,15 +42,16 @@ const [data, setData] = useState({
     setError("");
 
 try {
-const [crops, farms, tasks, financials, weather] = await Promise.all([
+const [crops, farms, tasks, financials, weather, inventory] = await Promise.all([
         cropService.getAll(),
         farmService.getAll(),
         taskService.getAll(),
         financialService.getAll(),
-        weatherService.getForecast()
+        weatherService.getForecast(),
+        inventoryService.getAll()
       ]);
 
-      setData({ crops, tasks, financials, weather, farms });
+setData({ crops, tasks, financials, weather, farms, inventory });
     } catch (error) {
       setError(error.message || "Failed to load dashboard data");
     } finally {
@@ -72,7 +75,7 @@ const [crops, farms, tasks, financials, weather] = await Promise.all([
   if (loading) return <Loading variant="dashboard" />;
   if (error) return <Error message={error} onRetry={loadDashboardData} />;
 
-  // Calculate statistics
+// Calculate statistics
   const activeCrops = data.crops.filter(crop => crop.status !== "harvested").length;
   const pendingTasks = data.tasks.filter(task => !task.completed).length;
   const overdueTasks = data.tasks.filter(task => 
@@ -89,6 +92,10 @@ const [crops, farms, tasks, financials, weather] = await Promise.all([
 
   const netIncome = totalIncome - totalExpenses;
 
+  // Inventory statistics
+  const totalInventoryItems = data.inventory.length;
+  const lowStockItems = data.inventory.filter(item => item.currentStock <= item.minStock).length;
+  const inventoryValue = data.inventory.reduce((sum, item) => sum + (item.unitCost * item.currentStock), 0);
   // Get upcoming tasks
   const upcomingTasks = data.tasks
     .filter(task => !task.completed)
@@ -129,7 +136,7 @@ const [crops, farms, tasks, financials, weather] = await Promise.all([
       </div>
 
       {/* Stats Cards */}
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
         <StatsCard
           title="Total Farms"
           value={data.farms.length}
@@ -153,6 +160,14 @@ const [crops, farms, tasks, financials, weather] = await Promise.all([
           color="warning"
           trend={overdueTasks > 0 ? "down" : ""}
           trendValue={overdueTasks > 0 ? `${overdueTasks} overdue` : "On track"}
+        />
+        <StatsCard
+          title="Inventory Items"
+          value={totalInventoryItems}
+          icon="Package"
+          color="info"
+          trend={lowStockItems > 0 ? "down" : "up"}
+          trendValue={lowStockItems > 0 ? `${lowStockItems} low stock` : "Well stocked"}
         />
         <StatsCard
           title="Net Income"
@@ -248,8 +263,8 @@ const [crops, farms, tasks, financials, weather] = await Promise.all([
           <h2 className="text-xl font-bold text-gray-900">Quick Actions</h2>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-<Button
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <Button
             onClick={() => navigate("/crops")}
             variant="outline"
             className="h-20 flex-col space-y-2"
@@ -272,6 +287,14 @@ const [crops, farms, tasks, financials, weather] = await Promise.all([
             icon="CheckSquare"
           >
             <span>Create Task</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/inventory")}
+            variant="outline"
+            className="h-20 flex-col space-y-2"
+            icon="Package"
+          >
+            <span>Manage Inventory</span>
           </Button>
           <Button
             onClick={() => navigate("/finances")}

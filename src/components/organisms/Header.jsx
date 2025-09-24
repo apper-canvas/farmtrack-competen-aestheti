@@ -22,12 +22,13 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
   };
 
   const navigationItems = [
-    { path: '/', name: 'Dashboard', icon: 'LayoutDashboard' },
+{ path: '/', name: 'Dashboard', icon: 'LayoutDashboard' },
     { path: '/crops', name: 'Crops', icon: 'Wheat' },
     { path: '/tasks', name: 'Tasks', icon: 'CheckSquare' },
     { path: '/finances', name: 'Finances', icon: 'DollarSign' },
     { path: '/weather', name: 'Weather', icon: 'Cloud' },
     { path: '/irrigation', name: 'Irrigation', icon: 'Droplets' },
+    { path: '/inventory', name: 'Inventory', icon: 'Package' },
     { path: '/farms', name: 'Farms', icon: 'Home' },
   ];
 
