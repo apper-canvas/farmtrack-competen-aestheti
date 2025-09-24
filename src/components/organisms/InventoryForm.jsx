@@ -9,19 +9,19 @@ import Card from "@/components/atoms/Card";
 
 const InventoryForm = ({ item, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
-    itemName: "",
-    category: "Seeds",
-    description: "",
-    supplier: "",
-    unitCost: "",
-    currentStock: "",
-    minStock: "",
-    maxStock: "",
-    unit: "",
-    location: "",
-    purchaseDate: "",
-    expiryDate: "",
-    notes: ""
+ItemName_c: "",
+    Category_c: "seeds",
+    Description_c: "",
+    Supplier_c: "",
+    UnitCost_c: "",
+    CurrentStock_c: "",
+    MinimumStock_c: "",
+    MaximumStock_c: "",
+    Unit_c: "",
+    StorageLocation_c: "",
+    PurchaseDate_c: "",
+    ExpiryDate_c: "",
+    Notes_c: ""
   });
 
   const [loading, setLoading] = useState(false);
@@ -29,19 +29,19 @@ const InventoryForm = ({ item, onSave, onCancel }) => {
   useEffect(() => {
     if (item) {
       setFormData({
-        itemName: item.itemName || "",
-        category: item.category || "Seeds",
-        description: item.description || "",
-        supplier: item.supplier || "",
-        unitCost: item.unitCost || "",
-        currentStock: item.currentStock || "",
-        minStock: item.minStock || "",
-        maxStock: item.maxStock || "",
-        unit: item.unit || "",
-        location: item.location || "",
-        purchaseDate: item.purchaseDate ? item.purchaseDate.split("T")[0] : "",
-        expiryDate: item.expiryDate ? item.expiryDate.split("T")[0] : "",
-        notes: item.notes || ""
+        ItemName_c: item.ItemName_c || "",
+        Category_c: item.Category_c || "seeds",
+        Description_c: item.Description_c || "",
+        Supplier_c: item.Supplier_c || "",
+        UnitCost_c: item.UnitCost_c || "",
+        CurrentStock_c: item.CurrentStock_c || "",
+        MinimumStock_c: item.MinimumStock_c || "",
+        MaximumStock_c: item.MaximumStock_c || "",
+        Unit_c: item.Unit_c || "",
+        StorageLocation_c: item.StorageLocation_c || "",
+        PurchaseDate_c: item.PurchaseDate_c ? item.PurchaseDate_c.split("T")[0] : "",
+        ExpiryDate_c: item.ExpiryDate_c ? item.ExpiryDate_c.split("T")[0] : "",
+        Notes_c: item.Notes_c || ""
       });
     }
   }, [item]);
@@ -53,10 +53,10 @@ const InventoryForm = ({ item, onSave, onCancel }) => {
     try {
       const itemData = {
         ...formData,
-        unitCost: parseFloat(formData.unitCost) || 0,
-        currentStock: parseInt(formData.currentStock) || 0,
-        minStock: parseInt(formData.minStock) || 0,
-        maxStock: parseInt(formData.maxStock) || 0
+        UnitCost_c: parseFloat(formData.UnitCost_c) || 0,
+        CurrentStock_c: parseInt(formData.CurrentStock_c) || 0,
+        MinimumStock_c: parseInt(formData.MinimumStock_c) || 0,
+        MaximumStock_c: parseInt(formData.MaximumStock_c) || 0
       };
 
       if (item) {
@@ -86,110 +86,110 @@ const InventoryForm = ({ item, onSave, onCancel }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="Item Name"
-            name="itemName"
-            value={formData.itemName}
+            name="ItemName_c"
+            value={formData.ItemName_c}
             onChange={handleChange}
             required
             placeholder="e.g., Hybrid Corn Seeds, NPK Fertilizer"
           />
           <Select
             label="Category"
-            name="category"
-            value={formData.category}
+            name="Category_c"
+            value={formData.Category_c}
             onChange={handleChange}
             required
           >
-            <option value="Seeds">Seeds</option>
-            <option value="Fertilizers">Fertilizers</option>
-            <option value="Equipment">Equipment</option>
-            <option value="Supplies">Supplies</option>
+            <option value="seeds">Seeds</option>
+            <option value="fertilizers">Fertilizers</option>
+            <option value="Equipments">Equipment</option>
+            <option value="suplies">Supplies</option>
           </Select>
           <Input
             label="Supplier"
-            name="supplier"
-            value={formData.supplier}
+            name="Supplier_c"
+            value={formData.Supplier_c}
             onChange={handleChange}
             placeholder="e.g., AgriSeeds Co."
           />
           <Input
             label="Unit Cost"
-            name="unitCost"
+            name="UnitCost_c"
             type="number"
             step="0.01"
             min="0"
-            value={formData.unitCost}
+            value={formData.UnitCost_c}
             onChange={handleChange}
             placeholder="0.00"
           />
           <Input
             label="Current Stock"
-            name="currentStock"
+            name="CurrentStock_c"
             type="number"
             min="0"
-            value={formData.currentStock}
+            value={formData.CurrentStock_c}
             onChange={handleChange}
             required
             placeholder="0"
           />
           <Input
             label="Minimum Stock"
-            name="minStock"
+            name="MinimumStock_c"
             type="number"
             min="0"
-            value={formData.minStock}
+            value={formData.MinimumStock_c}
             onChange={handleChange}
             placeholder="0"
           />
           <Input
             label="Maximum Stock"
-            name="maxStock"
+            name="MaximumStock_c"
             type="number"
             min="0"
-            value={formData.maxStock}
+            value={formData.MaximumStock_c}
             onChange={handleChange}
             placeholder="0"
           />
           <Input
             label="Unit"
-            name="unit"
-            value={formData.unit}
+            name="Unit_c"
+            value={formData.Unit_c}
             onChange={handleChange}
             placeholder="e.g., bags, pieces, liters"
           />
           <Input
             label="Storage Location"
-            name="location"
-            value={formData.location}
+            name="StorageLocation_c"
+            value={formData.StorageLocation_c}
             onChange={handleChange}
             placeholder="e.g., Seed Storage A, Equipment Shed"
           />
           <Input
             label="Purchase Date"
-            name="purchaseDate"
+            name="PurchaseDate_c"
             type="date"
-            value={formData.purchaseDate}
+            value={formData.PurchaseDate_c}
             onChange={handleChange}
           />
           <Input
             label="Expiry Date"
-            name="expiryDate"
+            name="ExpiryDate_c"
             type="date"
-            value={formData.expiryDate}
+            value={formData.ExpiryDate_c}
             onChange={handleChange}
           />
         </div>
         <Textarea
           label="Description"
-          name="description"
-          value={formData.description}
+          name="Description_c"
+          value={formData.Description_c}
           onChange={handleChange}
           placeholder="Detailed description of the inventory item..."
           rows={3}
         />
         <Textarea
           label="Notes"
-          name="notes"
-          value={formData.notes}
+          name="Notes_c"
+          value={formData.Notes_c}
           onChange={handleChange}
           placeholder="Additional notes or special instructions..."
           rows={3}

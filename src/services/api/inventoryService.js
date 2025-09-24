@@ -1,15 +1,6 @@
-import inventoryData from '../mockData/inventory.json';
+// ApperClient integration for inventory_c table operations
 
-// Helper function for realistic delays
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Generate new ID for mock data
-const generateId = () => {
-  const maxId = inventoryData.reduce((max, item) => Math.max(max, item.Id), 0);
-  return maxId + 1;
-};
-
-// Initialize ApperClient
+// Initialize ApperClient for database operations
 const getApperClient = () => {
   const { ApperClient } = window.ApperSDK;
   return new ApperClient({
@@ -23,22 +14,37 @@ const TABLE_NAME = 'inventory_c'; // Currently using mock data as table not foun
 
 export const inventoryService = {
   // Get all inventory items
-  async getAll() {
+async getAll() {
     try {
-      // Since inventory_c table not found, using enhanced mock service with ApperClient patterns
-      // When table becomes available, replace with ApperClient.fetchRecords call
-      await delay(300);
-      
       const apperClient = getApperClient();
       
-      // Mock response in ApperClient format for consistency
-      const response = {
-        success: true,
-        data: [...inventoryData],
-        total: inventoryData.length
+      const params = {
+        fields: [
+          {"field": {"Name": "ItemName_c"}},
+          {"field": {"Name": "Category_c"}},
+          {"field": {"Name": "Description_c"}},
+          {"field": {"Name": "Supplier_c"}},
+          {"field": {"Name": "UnitCost_c"}},
+          {"field": {"Name": "CurrentStock_c"}},
+          {"field": {"Name": "MinimumStock_c"}},
+          {"field": {"Name": "MaximumStock_c"}},
+          {"field": {"Name": "Unit_c"}},
+          {"field": {"Name": "StorageLocation_c"}},
+          {"field": {"Name": "PurchaseDate_c"}},
+          {"field": {"Name": "ExpiryDate_c"}},
+          {"field": {"Name": "Notes_c"}}
+        ],
+        orderBy: [{"fieldName": "Id", "sorttype": "DESC"}]
       };
+
+      const response = await apperClient.fetchRecords('inventory_c', params);
       
-      return response.data;
+      if (!response.success) {
+        console.error('Failed to fetch inventory:', response.message);
+        throw new Error(response.message);
+      }
+
+      return response.data || [];
     } catch (error) {
       console.error("Error fetching inventory items:", error?.response?.data?.message || error);
       throw new Error('Failed to fetch inventory items');
@@ -46,24 +52,36 @@ export const inventoryService = {
   },
 
   // Get inventory item by ID
-  async getById(id) {
+async getById(id) {
     try {
-      await delay(200);
-      
       const apperClient = getApperClient();
       const recordId = parseInt(id);
       
-      // Mock database operation - will be replaced with apperClient.getRecordById
-      const item = inventoryData.find(item => item.Id === recordId);
-      if (!item) {
-        throw new Error('Inventory item not found');
-      }
-      
-      const response = {
-        success: true,
-        data: { ...item }
+      const params = {
+        fields: [
+          {"field": {"Name": "ItemName_c"}},
+          {"field": {"Name": "Category_c"}},
+          {"field": {"Name": "Description_c"}},
+          {"field": {"Name": "Supplier_c"}},
+          {"field": {"Name": "UnitCost_c"}},
+          {"field": {"Name": "CurrentStock_c"}},
+          {"field": {"Name": "MinimumStock_c"}},
+          {"field": {"Name": "MaximumStock_c"}},
+          {"field": {"Name": "Unit_c"}},
+          {"field": {"Name": "StorageLocation_c"}},
+          {"field": {"Name": "PurchaseDate_c"}},
+          {"field": {"Name": "ExpiryDate_c"}},
+          {"field": {"Name": "Notes_c"}}
+        ]
       };
+
+      const response = await apperClient.getRecordById('inventory_c', recordId, params);
       
+      if (!response.success) {
+        console.error(`Failed to fetch inventory item ${recordId}:`, response.message);
+        throw new Error(response.message);
+      }
+
       return response.data;
     } catch (error) {
       console.error(`Error fetching inventory item ${id}:`, error?.response?.data?.message || error);
@@ -72,49 +90,54 @@ export const inventoryService = {
   },
 
   // Create new inventory item
-  async create(itemData) {
+async create(itemData) {
     try {
-      await delay(400);
-      
       // Validate required fields
-      if (!itemData.itemName || !itemData.category) {
+      if (!itemData.ItemName_c || !itemData.Category_c) {
         throw new Error('Item name and category are required');
       }
 
       const apperClient = getApperClient();
       
-      // Format data for ApperClient (when database available)
+      // Format data for ApperClient with exact database field names
       const formattedData = {
-        itemName: itemData.itemName,
-        category: itemData.category,
-        description: itemData.description || "",
-        supplier: itemData.supplier || "",
-        unitCost: parseFloat(itemData.unitCost) || 0,
-        currentStock: parseInt(itemData.currentStock) || 0,
-        minStock: parseInt(itemData.minStock) || 0,
-        maxStock: parseInt(itemData.maxStock) || 0,
-        unit: itemData.unit || "",
-        location: itemData.location || "",
-        purchaseDate: itemData.purchaseDate || "",
-        expiryDate: itemData.expiryDate || "",
-        notes: itemData.notes || ""
+        ItemName_c: itemData.ItemName_c,
+        Category_c: itemData.Category_c,
+        Description_c: itemData.Description_c || "",
+        Supplier_c: itemData.Supplier_c || "",
+        UnitCost_c: parseFloat(itemData.UnitCost_c) || 0,
+        CurrentStock_c: parseInt(itemData.CurrentStock_c) || 0,
+        MinimumStock_c: parseInt(itemData.MinimumStock_c) || 0,
+        MaximumStock_c: parseInt(itemData.MaximumStock_c) || 0,
+        Unit_c: itemData.Unit_c || "",
+        StorageLocation_c: itemData.StorageLocation_c || "",
+        PurchaseDate_c: itemData.PurchaseDate_c || "",
+        ExpiryDate_c: itemData.ExpiryDate_c || "",
+        Notes_c: itemData.Notes_c || ""
       };
 
-      // Mock database creation - will be replaced with apperClient.createRecord
-      const newItem = {
-        ...formattedData,
-        Id: generateId()
+      const params = {
+        records: [formattedData]
       };
 
-      inventoryData.push(newItem);
+      const response = await apperClient.createRecord('inventory_c', params);
       
-      const response = {
-        success: true,
-        results: [{
-          success: true,
-          data: { ...newItem }
-        }]
-      };
+      if (!response.success) {
+        console.error('Failed to create inventory item:', response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} inventory records:`, failed);
+          const errorMessage = failed[0].message || 'Failed to create inventory item';
+          throw new Error(errorMessage);
+        }
+        return successful[0]?.data;
+      }
 
       return response.results[0].data;
     } catch (error) {
@@ -124,51 +147,51 @@ export const inventoryService = {
   },
 
   // Update inventory item
-  async update(id, itemData) {
+async update(id, itemData) {
     try {
-      await delay(350);
-      
       const recordId = parseInt(id);
-      const index = inventoryData.findIndex(item => item.Id === recordId);
-      if (index === -1) {
-        throw new Error('Inventory item not found');
-      }
-
       const apperClient = getApperClient();
       
-      // Format data for ApperClient (when database available)
+      // Format data for ApperClient with exact database field names
       const formattedData = {
         Id: recordId,
-        itemName: itemData.itemName,
-        category: itemData.category,
-        description: itemData.description || "",
-        supplier: itemData.supplier || "",
-        unitCost: parseFloat(itemData.unitCost) || 0,
-        currentStock: parseInt(itemData.currentStock) || 0,
-        minStock: parseInt(itemData.minStock) || 0,
-        maxStock: parseInt(itemData.maxStock) || 0,
-        unit: itemData.unit || "",
-        location: itemData.location || "",
-        purchaseDate: itemData.purchaseDate || "",
-        expiryDate: itemData.expiryDate || "",
-        notes: itemData.notes || ""
+        ItemName_c: itemData.ItemName_c,
+        Category_c: itemData.Category_c,
+        Description_c: itemData.Description_c || "",
+        Supplier_c: itemData.Supplier_c || "",
+        UnitCost_c: parseFloat(itemData.UnitCost_c) || 0,
+        CurrentStock_c: parseInt(itemData.CurrentStock_c) || 0,
+        MinimumStock_c: parseInt(itemData.MinimumStock_c) || 0,
+        MaximumStock_c: parseInt(itemData.MaximumStock_c) || 0,
+        Unit_c: itemData.Unit_c || "",
+        StorageLocation_c: itemData.StorageLocation_c || "",
+        PurchaseDate_c: itemData.PurchaseDate_c || "",
+        ExpiryDate_c: itemData.ExpiryDate_c || "",
+        Notes_c: itemData.Notes_c || ""
       };
 
-      // Mock database update - will be replaced with apperClient.updateRecord
-      const updatedItem = {
-        ...inventoryData[index],
-        ...formattedData
+      const params = {
+        records: [formattedData]
       };
 
-      inventoryData[index] = updatedItem;
+      const response = await apperClient.updateRecord('inventory_c', params);
       
-      const response = {
-        success: true,
-        results: [{
-          success: true,
-          data: { ...updatedItem }
-        }]
-      };
+      if (!response.success) {
+        console.error(`Failed to update inventory item ${recordId}:`, response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} inventory records:`, failed);
+          const errorMessage = failed[0].message || 'Failed to update inventory item';
+          throw new Error(errorMessage);
+        }
+        return successful[0]?.data;
+      }
 
       return response.results[0].data;
     } catch (error) {
@@ -177,31 +200,36 @@ export const inventoryService = {
     }
   },
 
-  // Delete inventory item
+// Delete inventory item
   async delete(id) {
     try {
-      await delay(250);
-      
       const recordId = parseInt(id);
-      const index = inventoryData.findIndex(item => item.Id === recordId);
-      if (index === -1) {
-        throw new Error('Inventory item not found');
-      }
-
       const apperClient = getApperClient();
       
-      // Mock database deletion - will be replaced with apperClient.deleteRecord
-      inventoryData.splice(index, 1);
-      
-      const response = {
-        success: true,
-        results: [{
-          success: true,
-          data: { Id: recordId }
-        }]
+      const params = {
+        RecordIds: [recordId]
       };
 
-      return response.success;
+      const response = await apperClient.deleteRecord('inventory_c', params);
+      
+      if (!response.success) {
+        console.error(`Failed to delete inventory item ${recordId}:`, response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to delete ${failed.length} inventory records:`, failed);
+          const errorMessage = failed[0].message || 'Failed to delete inventory item';
+          throw new Error(errorMessage);
+        }
+        return successful.length > 0;
+      }
+
+      return true;
     } catch (error) {
       console.error(`Error deleting inventory item ${id}:`, error?.response?.data?.message || error);
       throw error;
@@ -209,22 +237,38 @@ export const inventoryService = {
   },
 
   // Get items by category
-  async getByCategory(category) {
+async getByCategory(category) {
     try {
-      await delay(200);
-      
       const apperClient = getApperClient();
       
-      // Mock filtered query - will be replaced with ApperClient.fetchRecords with where conditions
-      const filteredItems = inventoryData.filter(item => item.category === category);
-      
-      const response = {
-        success: true,
-        data: filteredItems.map(item => ({ ...item })),
-        total: filteredItems.length
+      const params = {
+        fields: [
+          {"field": {"Name": "ItemName_c"}},
+          {"field": {"Name": "Category_c"}},
+          {"field": {"Name": "Description_c"}},
+          {"field": {"Name": "Supplier_c"}},
+          {"field": {"Name": "UnitCost_c"}},
+          {"field": {"Name": "CurrentStock_c"}},
+          {"field": {"Name": "MinimumStock_c"}},
+          {"field": {"Name": "MaximumStock_c"}},
+          {"field": {"Name": "Unit_c"}},
+          {"field": {"Name": "StorageLocation_c"}},
+          {"field": {"Name": "PurchaseDate_c"}},
+          {"field": {"Name": "ExpiryDate_c"}},
+          {"field": {"Name": "Notes_c"}}
+        ],
+        where: [{"FieldName": "Category_c", "Operator": "EqualTo", "Values": [category]}],
+        orderBy: [{"fieldName": "Id", "sorttype": "DESC"}]
       };
+
+      const response = await apperClient.fetchRecords('inventory_c', params);
       
-      return response.data;
+      if (!response.success) {
+        console.error(`Failed to fetch inventory by category ${category}:`, response.message);
+        throw new Error(response.message);
+      }
+
+      return response.data || [];
     } catch (error) {
       console.error(`Error fetching inventory items by category ${category}:`, error?.response?.data?.message || error);
       return [];
@@ -232,39 +276,60 @@ export const inventoryService = {
   },
 
   // Get low stock items
-  async getLowStockItems() {
+async getLowStockItems() {
     try {
-      await delay(200);
-      
       const apperClient = getApperClient();
       
-      // Mock filtered query - will be replaced with ApperClient.fetchRecords with where conditions
-      const lowStockItems = inventoryData.filter(item => item.currentStock <= item.minStock);
-      
-      const response = {
-        success: true,
-        data: lowStockItems.map(item => ({ ...item })),
-        total: lowStockItems.length
+      const params = {
+        fields: [
+          {"field": {"Name": "ItemName_c"}},
+          {"field": {"Name": "Category_c"}},
+          {"field": {"Name": "Description_c"}},
+          {"field": {"Name": "Supplier_c"}},
+          {"field": {"Name": "UnitCost_c"}},
+          {"field": {"Name": "CurrentStock_c"}},
+          {"field": {"Name": "MinimumStock_c"}},
+          {"field": {"Name": "MaximumStock_c"}},
+          {"field": {"Name": "Unit_c"}},
+          {"field": {"Name": "StorageLocation_c"}},
+          {"field": {"Name": "PurchaseDate_c"}},
+          {"field": {"Name": "ExpiryDate_c"}},
+          {"field": {"Name": "Notes_c"}}
+        ],
+        whereGroups: [{
+          "operator": "OR",
+          "subGroups": [{
+            "conditions": [
+              {"fieldName": "CurrentStock_c", "operator": "LessThanOrEqualTo", "values": ["MinimumStock_c"]}
+            ],
+            "operator": ""
+          }]
+        }],
+        orderBy: [{"fieldName": "Id", "sorttype": "DESC"}]
       };
+
+      const response = await apperClient.fetchRecords('inventory_c', params);
       
-      return response.data;
+      if (!response.success) {
+        console.error('Failed to fetch low stock items:', response.message);
+        throw new Error(response.message);
+      }
+return response.data || [];
     } catch (error) {
       console.error("Error fetching low stock items:", error?.response?.data?.message || error);
       return [];
     }
   },
 
-  // Update stock quantity
+// Update stock quantity
   async updateStock(id, newStock) {
     try {
-      await delay(250);
-      
       const recordId = parseInt(id);
       const stockValue = parseInt(newStock) || 0;
       
       // Use the update method with partial data
       const updatedItem = await this.update(recordId, {
-        currentStock: stockValue
+        CurrentStock_c: stockValue
       });
       
       return updatedItem;
@@ -275,29 +340,62 @@ export const inventoryService = {
   },
 
   // Get inventory statistics
-  async getStatistics() {
+async getStatistics() {
     try {
-      await delay(150);
-      
       const apperClient = getApperClient();
       
-      // Mock aggregation query - will be replaced with ApperClient.fetchRecords with aggregators
-      const totalItems = inventoryData.length;
-      const lowStockItems = inventoryData.filter(item => item.currentStock <= item.minStock).length;
-      const categories = [...new Set(inventoryData.map(item => item.category))];
-      const totalValue = inventoryData.reduce((sum, item) => sum + (item.unitCost * item.currentStock), 0);
-      
-      const response = {
-        success: true,
-        data: {
-          totalItems,
-          lowStockItems,
-          categories: categories.length,
-          totalValue
-        }
+      // Get total items count
+      const totalParams = {
+        fields: [{"field": {"Name": "Id"}}],
+        aggregators: [{
+          "id": "totalItems",
+          "fields": [{"field": {"Name": "Id"}, "Function": "Count"}]
+        }]
       };
-      
-      return response.data;
+
+      // Get low stock items count
+      const lowStockParams = {
+        fields: [{"field": {"Name": "Id"}}],
+        whereGroups: [{
+          "operator": "OR",
+          "subGroups": [{
+            "conditions": [
+              {"fieldName": "CurrentStock_c", "operator": "LessThanOrEqualTo", "values": ["MinimumStock_c"]}
+            ],
+            "operator": ""
+          }]
+        }],
+        aggregators: [{
+          "id": "lowStockItems",
+          "fields": [{"field": {"Name": "Id"}, "Function": "Count"}]
+        }]
+      };
+
+      // Get categories count
+      const categoriesParams = {
+        fields: [{"field": {"Name": "Category_c"}}],
+        groupBy: ["Category_c"]
+      };
+
+      const [totalResponse, lowStockResponse, categoriesResponse] = await Promise.all([
+        apperClient.fetchRecords('inventory_c', totalParams),
+        apperClient.fetchRecords('inventory_c', lowStockParams),
+        apperClient.fetchRecords('inventory_c', categoriesParams)
+      ]);
+
+      if (!totalResponse.success) {
+        console.error('Failed to fetch inventory statistics:', totalResponse.message);
+        throw new Error(totalResponse.message);
+      }
+
+      const statistics = {
+        totalItems: totalResponse.aggregators?.[0]?.value || 0,
+        lowStockItems: lowStockResponse.aggregators?.[0]?.value || 0,
+        categories: categoriesResponse.data?.length || 0,
+        totalValue: 0 // Calculate from individual records if needed
+      };
+
+return statistics;
     } catch (error) {
       console.error("Error fetching inventory statistics:", error?.response?.data?.message || error);
       return {

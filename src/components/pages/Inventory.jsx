@@ -51,23 +51,23 @@ const Inventory = () => {
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(item =>
-        item.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.supplier?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.location?.toLowerCase().includes(searchTerm.toLowerCase())
+item.ItemName_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.Category_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.Supplier_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.StorageLocation_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Filter by category
     if (categoryFilter !== "all") {
-      filtered = filtered.filter(item => item.category === categoryFilter);
+      filtered = filtered.filter(item => item.Category_c === categoryFilter);
     }
 
     // Filter by stock level
     if (stockFilter === "low") {
-      filtered = filtered.filter(item => item.currentStock <= item.minStock);
+      filtered = filtered.filter(item => item.CurrentStock_c <= item.MinimumStock_c);
     } else if (stockFilter === "good") {
-      filtered = filtered.filter(item => item.currentStock > item.minStock);
+      filtered = filtered.filter(item => item.CurrentStock_c > item.MinimumStock_c);
     }
 
     setFilteredInventory(filtered);
@@ -106,7 +106,7 @@ const Inventory = () => {
     setEditingItem(null);
   };
 
-  const categories = [...new Set(inventory.map(item => item.category))];
+const categories = [...new Set(inventory.map(item => item.Category_c))];
 
   if (showForm) {
     return (
@@ -194,26 +194,26 @@ const Inventory = () => {
       {inventory.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="text-center bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <div className="text-2xl font-bold text-blue-800">
-              {inventory.filter(i => i.category === "Seeds").length}
+<div className="text-2xl font-bold text-blue-800">
+              {inventory.filter(i => i.Category_c === "seeds").length}
             </div>
             <div className="text-sm text-blue-600 font-medium">Seeds</div>
           </Card>
           <Card className="text-center bg-gradient-to-br from-green-50 to-green-100 border-green-200">
             <div className="text-2xl font-bold text-green-800">
-              {inventory.filter(i => i.category === "Fertilizers").length}
+              {inventory.filter(i => i.Category_c === "fertilizers").length}
             </div>
             <div className="text-sm text-green-600 font-medium">Fertilizers</div>
           </Card>
           <Card className="text-center bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
             <div className="text-2xl font-bold text-purple-800">
-              {inventory.filter(i => i.category === "Equipment").length}
+              {inventory.filter(i => i.Category_c === "Equipments").length}
             </div>
             <div className="text-sm text-purple-600 font-medium">Equipment</div>
           </Card>
           <Card className="text-center bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
             <div className="text-2xl font-bold text-orange-800">
-              {inventory.filter(i => i.category === "Supplies").length}
+              {inventory.filter(i => i.Category_c === "suplies").length}
             </div>
             <div className="text-sm text-orange-600 font-medium">Supplies</div>
           </Card>
@@ -225,7 +225,7 @@ const Inventory = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredInventory.map((item) => (
             <InventoryCard
-              key={item.Id}
+key={item.Id}
               item={item}
               onEdit={handleEditItem}
               onDelete={handleDeleteItem}

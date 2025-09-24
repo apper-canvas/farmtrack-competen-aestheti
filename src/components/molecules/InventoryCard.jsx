@@ -6,9 +6,9 @@ import ApperIcon from "@/components/ApperIcon";
 
 const InventoryCard = ({ item, onEdit, onDelete }) => {
   const getStockStatus = () => {
-    if (item.currentStock <= item.minStock) {
+if (item.CurrentStock_c <= item.MinimumStock_c) {
       return { status: "Low Stock", color: "warning", icon: "AlertTriangle" };
-    } else if (item.currentStock >= item.maxStock) {
+    } else if (item.CurrentStock_c >= item.MaximumStock_c) {
       return { status: "Overstocked", color: "info", icon: "TrendingUp" };
     } else {
       return { status: "Good Stock", color: "success", icon: "CheckCircle" };
@@ -16,17 +16,17 @@ const InventoryCard = ({ item, onEdit, onDelete }) => {
   };
 
   const stockInfo = getStockStatus();
-  const stockPercentage = item.maxStock > 0 ? (item.currentStock / item.maxStock) * 100 : 0;
+  const stockPercentage = item.MaximumStock_c > 0 ? (item.CurrentStock_c / item.MaximumStock_c) * 100 : 0;
 
   const getCategoryIcon = (category) => {
     switch (category) {
-      case "Seeds":
+      case "seeds":
         return "Sprout";
-      case "Fertilizers":
+      case "fertilizers":
         return "Zap";
-      case "Equipment":
+      case "Equipments":
         return "Wrench";
-      case "Supplies":
+      case "suplies":
         return "Package";
       default:
         return "Package";
@@ -39,16 +39,16 @@ const InventoryCard = ({ item, onEdit, onDelete }) => {
   };
 
   const isExpiringSoon = () => {
-    if (!item.expiryDate) return false;
-    const expiryDate = new Date(item.expiryDate);
+    if (!item.ExpiryDate_c) return false;
+    const expiryDate = new Date(item.ExpiryDate_c);
     const today = new Date();
     const daysDiff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
     return daysDiff <= 30 && daysDiff > 0;
   };
 
   const isExpired = () => {
-    if (!item.expiryDate) return false;
-    return new Date(item.expiryDate) < new Date();
+    if (!item.ExpiryDate_c) return false;
+    return new Date(item.ExpiryDate_c) < new Date();
   };
 
   return (
@@ -57,24 +57,24 @@ const InventoryCard = ({ item, onEdit, onDelete }) => {
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-primary-100 rounded-lg">
-            <ApperIcon name={getCategoryIcon(item.category)} className="h-5 w-5 text-primary-600" />
+            <ApperIcon name={getCategoryIcon(item.Category_c)} className="h-5 w-5 text-primary-600" />
           </div>
           <div>
             <h3 className="font-semibold text-lg text-gray-900 leading-tight">
-              {item.itemName}
+              {item.ItemName_c}
             </h3>
-            <p className="text-sm text-gray-500">{item.category}</p>
+            <p className="text-sm text-gray-500">{item.Category_c}</p>
           </div>
         </div>
         <Badge variant="outline" className="text-xs">
-          {item.unit}
+          {item.Unit_c}
         </Badge>
       </div>
 
       {/* Description */}
-      {item.description && (
+      {item.Description_c && (
         <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-          {item.description}
+          {item.Description_c}
         </p>
       )}
 
@@ -92,14 +92,14 @@ const InventoryCard = ({ item, onEdit, onDelete }) => {
         
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span>Current: {item.currentStock}</span>
-            <span>Min: {item.minStock}</span>
-            <span>Max: {item.maxStock}</span>
+            <span>Current: {item.CurrentStock_c}</span>
+            <span>Min: {item.MinimumStock_c}</span>
+            <span>Max: {item.MaximumStock_c}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
               className={`h-2 rounded-full transition-all duration-300 ${
-                stockPercentage <= (item.minStock / item.maxStock) * 100 
+                stockPercentage <= (item.MinimumStock_c / item.MaximumStock_c) * 100 
                   ? 'bg-warning' 
                   : stockPercentage >= 100 
                     ? 'bg-info' 
@@ -113,22 +113,22 @@ const InventoryCard = ({ item, onEdit, onDelete }) => {
 
       {/* Details */}
       <div className="space-y-2 text-sm text-gray-600 mb-4 flex-1">
-        {item.supplier && (
+        {item.Supplier_c && (
           <div className="flex items-center space-x-2">
             <ApperIcon name="Building2" className="h-4 w-4" />
-            <span>{item.supplier}</span>
+            <span>{item.Supplier_c}</span>
           </div>
         )}
-        {item.location && (
+        {item.StorageLocation_c && (
           <div className="flex items-center space-x-2">
             <ApperIcon name="MapPin" className="h-4 w-4" />
-            <span>{item.location}</span>
+            <span>{item.StorageLocation_c}</span>
           </div>
         )}
-        {item.unitCost && (
+        {item.UnitCost_c && (
           <div className="flex items-center space-x-2">
             <ApperIcon name="DollarSign" className="h-4 w-4" />
-            <span>${item.unitCost.toFixed(2)} per {item.unit}</span>
+            <span>${item.UnitCost_c.toFixed(2)} per {item.Unit_c}</span>
           </div>
         )}
       </div>
@@ -140,7 +140,7 @@ const InventoryCard = ({ item, onEdit, onDelete }) => {
         }`}>
           <ApperIcon name="AlertCircle" className="h-4 w-4" />
           <span>
-            {isExpired() ? 'Expired' : 'Expires Soon'}: {formatDate(item.expiryDate)}
+            {isExpired() ? 'Expired' : 'Expires Soon'}: {formatDate(item.ExpiryDate_c)}
           </span>
         </div>
       )}
