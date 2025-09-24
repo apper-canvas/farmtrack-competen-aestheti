@@ -91,7 +91,7 @@ const Header = () => {
                   : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
               }`}
             >
-Weather
+              Weather
             </Link>
             <Link
               to="/irrigation"
@@ -195,7 +195,8 @@ Weather
                     ? 'bg-primary-50 text-primary-600' 
                     : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                 }`}
->
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 Weather
               </Link>
               <Link
