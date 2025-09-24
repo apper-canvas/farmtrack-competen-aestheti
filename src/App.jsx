@@ -11,6 +11,7 @@ import Tasks from "@/components/pages/Tasks";
 import Finances from "@/components/pages/Finances";
 import Weather from "@/components/pages/Weather";
 import Irrigation from "@/components/pages/Irrigation";
+import Inventory from "@/components/pages/Inventory";
 import Login from '@/components/pages/Login';
 import Signup from '@/components/pages/Signup';
 import Callback from '@/components/pages/Callback';
@@ -141,6 +142,7 @@ function App() {
               <Route path="finances" element={<Finances />} />
 <Route path="weather" element={<Weather />} />
               <Route path="irrigation" element={<Irrigation />} />
+              <Route path="inventory" element={<Inventory />} />
             </Route>
           )}
           <Route path="*" element={<NotFound />} />
